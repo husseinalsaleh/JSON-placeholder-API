@@ -1,15 +1,16 @@
+// Refactoring using new Promise
 
-// Fetching data from API Using Fetch API with Promises
+
 function getPosts(userId) {
     fetch("https://jsonplaceholder.typicode.com/posts?userId=" + userId)
         .then(response => {
-            if (response.status >= 200 && response.status < 300) {
-                return response.json();
+            if (response.ok) { //response.status >= 200 && response.status 
+                return response.json(); // this returns promise
             } else {
                 throw new Error('Failed to fetch posts');
             }
         })
-        .then(posts => {
+        .then(posts => { //posts represents a paramteter that is a json
             document.getElementById("posts").innerHTML = "";
             for (post of posts) {
                 let content = `
@@ -27,33 +28,39 @@ function getPosts(userId) {
 }
 
 function getUsers() {
-    fetch("https://jsonplaceholder.typicode.com/users")
-        .then(response => {
-            if (response.status >= 200 && response.status < 300) {
-                return response.json();
-            } else {
-                throw new Error('Failed to fetch users');
-            }
-        })
-        .then(users => {
-            document.getElementById("users").innerHTML = "";
-            for (user of users) {
-                let content = `
+
+    return new Promise((resolve, reject) => {
+        fetch("https://jsonplaceholder.typicode.com/users")
+            .then(response => {
+                if (response.ok) { //response.status >= 200 && response.status 
+                    return response.json();
+                } else {
+                    throw new Error('Failed to fetch users');
+                }
+            })
+            .then(users => {
+                document.getElementById("users").innerHTML = "";
+                for (user of users) {
+                    let content = `
                 <div onclick="userClicked(${user.id}, this)" id="user">
-                    <h3>${user.username}</h3>
+                    <h3>${user.name}</h3>
                     <h3>${user.email}</h3>
                 </div>
                 `;
-                document.getElementById("users").innerHTML += content;
-            }
-        })
-        .catch(() => {
-            alert("Error loading users");
-        });
+                    document.getElementById("users").innerHTML += content;
+                }
+                resolve();
+            })
+            .catch(() => {
+                alert("Error loading users");
+            });
+    })
+
 }
 
-getPosts(2);
-getUsers();
+getUsers().then(() => {
+    getPosts(1);
+});
 
 function userClicked(id, ele) {
     getPosts(id);
@@ -63,6 +70,72 @@ function userClicked(id, ele) {
     }
     ele.classList.add("selected");
 };
+
+
+// // Fetching data from API Using Fetch API with Promises
+// function getPosts(userId) {
+//     fetch("https://jsonplaceholder.typicode.com/posts?userId=" + userId)
+//         .then(response => {
+//             if (response.status >= 200 && response.status < 300) {
+//                 return response.json();
+//             } else {
+//                 throw new Error('Failed to fetch posts');
+//             }
+//         })
+//         .then(posts => {
+//             document.getElementById("posts").innerHTML = "";
+//             for (post of posts) {
+//                 let content = `
+//                     <div id="post">
+//                         <h3>${post.title}</h3>
+//                         <h4>${post.body}</h4>
+//                     </div>
+//                 `;
+//                 document.getElementById("posts").innerHTML += content;
+//             }
+//         })
+//         .catch(() => {
+//             alert("Error loading posts");
+//         });
+// }
+
+// function getUsers() {
+//     fetch("https://jsonplaceholder.typicode.com/users")
+//         .then(response => {
+//             if (response.status >= 200 && response.status < 300) {
+//                 return response.json();
+//             } else {
+//                 throw new Error('Failed to fetch users');
+//             }
+//         })
+//         .then(users => {
+//             document.getElementById("users").innerHTML = "";
+//             for (user of users) {
+//                 let content = `
+//                 <div onclick="userClicked(${user.id}, this)" id="user">
+//                     <h3>${user.username}</h3>
+//                     <h3>${user.email}</h3>
+//                 </div>
+//                 `;
+//                 document.getElementById("users").innerHTML += content;
+//             }
+//         })
+//         .catch(() => {
+//             alert("Error loading users");
+//         });
+// }
+
+// getPosts(2);
+// getUsers();
+
+// function userClicked(id, ele) {
+//     getPosts(id);
+//     let selectedElements = document.getElementsByClassName("selected")
+//     for (element of selectedElements) {
+//         element.classList.remove("selected");
+//     }
+//     ele.classList.add("selected");
+// };
 
 
 
