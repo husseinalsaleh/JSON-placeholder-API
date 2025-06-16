@@ -4,6 +4,8 @@
 
 A simple web application that displays users and their posts from JSONPlaceholder API. Users can click on any user to view their posts.
 
+https://husseinalsaleh.github.io/JSON-placeholder-API/
+
 ## Features
 - Fetches and displays user list
 - Shows posts for selected user
