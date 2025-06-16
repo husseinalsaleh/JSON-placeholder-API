@@ -3,10 +3,10 @@
 function getPosts(userId) {
     fetch("https://jsonplaceholder.typicode.com/posts?userId=" + userId)
         .then(response => {
-            if (response.ok) {
+            if (response.status >= 200 && response.status < 300) {
                 return response.json();
             } else {
-                throw new Error('Request failed');
+                throw new Error('Failed to fetch posts');
             }
         })
         .then(posts => {
@@ -22,18 +22,17 @@ function getPosts(userId) {
             }
         })
         .catch(() => {
-            alert("error");
+            alert("Error loading posts");
         });
 }
 
-// Fetching users from API Using Fetch API with Promises
 function getUsers() {
     fetch("https://jsonplaceholder.typicode.com/users")
         .then(response => {
-            if (response.ok) {
+            if (response.status >= 200 && response.status < 300) {
                 return response.json();
             } else {
-                throw new Error('Request failed');
+                throw new Error('Failed to fetch users');
             }
         })
         .then(users => {
@@ -49,14 +48,13 @@ function getUsers() {
             }
         })
         .catch(() => {
-            alert("error");
+            alert("Error loading users");
         });
 }
 
 getPosts(2);
 getUsers();
 
-// Fetching posts of selected user 
 function userClicked(id, ele) {
     getPosts(id);
     let selectedElements = document.getElementsByClassName("selected")
