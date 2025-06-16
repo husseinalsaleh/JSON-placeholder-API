@@ -1,7 +1,8 @@
 // Fetching data from API Using XMLHTTPSREQUESt
-function getPosts() {
+
+function getPosts(userId) {
     let request = new XMLHttpRequest()
-    request.open("GET", "https://jsonplaceholder.typicode.com/posts");
+    request.open("GET", "https://jsonplaceholder.typicode.com/posts?userId=" + userId);
     request.responseType = "json";
     request.send();
     request.onload = function () {
@@ -27,7 +28,7 @@ function getPosts() {
 
 // Fetching users from API Using XMLHTTPSREQUESt
 
-getPosts();
+getPosts(2);
 
 
 function getUsers() {
@@ -42,7 +43,7 @@ function getUsers() {
 
             for (user of users) {
                 let content = `
-                <div id="user" class="selected">
+                <div onclick="userClicked(${user.id}, this)" id="user">
                     <h3>${user.username}</h3>
                     <h3>${user.email}</h3>
                 </div>
@@ -57,3 +58,14 @@ function getUsers() {
 }
 
 getUsers();
+
+// Fetching posts of selected user
+
+function userClicked(id, ele) {
+    getPosts(id);
+    let selectedElements = document.getElementsByClassName("selected")
+    for (element of selectedElements) {
+        element.classList.remove("selected");
+    }
+    ele.classList.add("selected");
+};
